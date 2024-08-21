@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AREP</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <style>
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daniel Santiago Torres Acosta - Taller 1</h1>
+    
+    <!-- Formulario para solicitar datos RESTful (GET) -->
+    <h2>Form with GET</h2>
+    <form>
+        <label for="filename">Name:</label>
+        <input type="text" id="filename" name="filename" value="test.html"><br><br>
+        <input type="button" value="Submit" onclick="loadFile()">
+    </form>
+    <div id="fileContent"></div>
+
+
+    <!-- Formulario para solicitar datos RESTful (POST) -->
+    <h1>Form with POST</h1>
+    <form action="/hellopost">
+        <label for="postname">Name:</label><br>
+        <input type="text" id="postname" name="name" value="test.html"><br><br>
+        <input type="button" value="Submit" onclick="loadPostMsg(postname)">
+    </form>
+    <div id="postrespmsg"></div>
+
+    <script>
+    // Función para solicitar archivos estáticos
+    function loadFile() {
+        let filename = document.getElementById("filename").value;
+        let fileType = filename.split('.').pop(); // Obtener la extensión del archivo
+
+        if (fileType === 'html') {
+            // Si es un archivo HTML, abrir en una nueva pestaña
+            window.open("/" + filename, "_blank");
+        } else {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() {
+                if (fileType === 'png' || fileType === 'jpg' || fileType === 'jpeg') {
+                    // Mostrar la imagen si es un archivo de imagen
+                    document.getElementById("fileContent").innerHTML = `<img src='/${filename}' alt='Imagen no encontrada' />`;
+                } else if (fileType === 'js') {
+                    // Ejecutar el contenido del archivo JS
+                    const script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.text = this.responseText;
+                    document.body.appendChild(script);
+                } else if (fileType === 'css') {
+                    // Aplicar el archivo CSS cargado
+                    const style = document.createElement("style");
+                    style.type = "text/css";
+                    style.textContent = this.responseText;
+                    document.head.appendChild(style);
+                }
+                else {
+                    document.getElementById("fileContent").innerHTML = this.responseText;
+                }
+            }
+            xhttp.open("GET", "/" + filename);
+            xhttp.send();
+        }
+    }
+
+    // Función para realizar una solicitud GET
+    function loadGetMsg() {
+        let nameVar = document.getElementById("name").value;
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() {
+            document.getElementById("getrespmsg").innerHTML = this.responseText;
+        }
+        xhttp.open("GET", "/hello?name=" + nameVar, true);
+        xhttp.send();
+    }
+
+    // Función para realizar una solicitud POST con JSON
+    function loadPostMsg(name) {
+        let url = "/hellopost";
+        let data = {
+            name: name.value
+        };
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("postrespmsg").innerHTML = JSON.stringify(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    </script>
+</body>
+</html>
