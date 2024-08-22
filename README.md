@@ -46,6 +46,13 @@ Se muestra el funcionamiento del Servicio Get-REST
 
 ![imagen](https://github.com/user-attachments/assets/96b1599c-c6f4-4851-bf4e-eb66885026c6)
 
+## Autores
+
+* **Daniel Torres** - [RulosS290](https://github.com/RulosS290)
+
+## Agradecimientos
+
+* Al profesor [Luis Daniel Benavides Navarro](https://ldbn.is.escuelaing.edu.co/) por compartir sus conocimientos.
 
 
 
